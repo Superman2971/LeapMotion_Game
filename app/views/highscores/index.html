@@ -1,26 +1,23 @@
-<%= form_tag(game_path, {:method => :get}) do %>
-  <%= text_field_tag :name %>
-  <%= submit_tag %>
-<% end %>
-
-<!-- Button trigger modal -->
-<button class="btn btn-primary" data-toggle="modal" data-target="#scoreboard">
-  Launch Highscores modal
-</button>
-
-<!-- Modal for Highscores -->
-<div id="scoreboard" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title">Highscores</h4>
+<div id="background_image">
+  <div class="row">
+    <div class="col-xs-4"></div>
+    <div class="col-xs-4 well">
+        <h1>Welcome to SpaceLeap!</h1>
+        <h4>Disclaimer! Game requires a Leap Motion to play. If you don't have one, I recommend you buy one.</h4>
+        <div class="btn-toolbar" id="name_start">
+          <%= form_tag(game_path, {:method => :get}) do %>
+          <div>Include name to save score:</div>
+          <input id="name" name="name" type="text" placeholder="Name" />
+          <%= submit_tag "Start Game", class: 'btn btn-success' %>
+          <% end %>
+        </div>
+        <div>
+          <h3>Highscores</h3>
+          <% @highscores.order("score desc").limit(10).each_with_index do |x,index| %>
+          <p>#<%= index+1 %> ) <%= x.initials %>: <%= x.score %></p>
+          <% end %>
+        </div>
       </div>
-      <div class="modal-body">
-        <% @highscores.each do |x| %>
-        <p><%= x.initials %>: <%= x.score %></p>
-        <% end %>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    <div class="col-xs-4"></div>
+</div>
+</div>

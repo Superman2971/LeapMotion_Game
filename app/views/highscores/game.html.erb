@@ -1,30 +1,35 @@
-  <!-- NEED TO ADD START PAGE THAT REQUESTS INITIAL OR NAME -->
-  <!-- NEED TO ADD SCORE AND INITIALS TO A CREATE!!!! -->
-  <!-- Add Modal with the top highscores, maybe all scores! -->
-
-    <!-- The canvas for the panning background -->
-    <canvas id="background" width="600" height="360">
-      Your browser does not support canvas. Please try again with a different browser.
-    </canvas>
-    <!-- The canvas for all enemy ships and bullets -->
-    <canvas id="main" width="600" height="360">
-    </canvas>
-    <!-- The canvas the ship uses (can only move up
-         one forth the screen.) -->
-    <canvas id="ship" width="600" height="360">
-    </canvas>
-    <!-- The canvas for Leap Motion ship -->
-    <canvas id="leap" width="600" height="360">
-    </canvas>
-    <!-- Overlays for the canvas -->
-    <div class="score">SCORE: <span id="score"></span></div>
-    <div class="highscore">HIGHSCORE: <%= @top_score %></div>
-    <div id="game-over">GAME OVER
-      <%= link_to "CLICK HERE TO START AS A NEW PLAYER", root_path %></div>
-    </div>
-    <div id="missing-hand">Place your hand over the Leap Motion device</div>
-    <div id="wave">WAVE NUMBER: <span id="wave_number"></span></div>
-    <div id="hidden_name"><%= @name %></div>
+<div id="canvas_wrap">
+  <!-- The canvas for the panning background -->
+  <canvas id="background" width="600" height="360">
+    Your browser does not support canvas. Please try again with a different browser.
+  </canvas>
+  <!-- The canvas for all enemy ships and bullets -->
+  <canvas id="main" width="600" height="360">
+  </canvas>
+  <!-- The canvas the ship uses (can only move up
+       one forth the screen.) -->
+  <canvas id="ship" width="600" height="360">
+  </canvas>
+  <!-- The canvas for Leap Motion ship -->
+  <canvas id="leap" width="600" height="360">
+  </canvas>
+  <!-- Overlays for the canvas -->
+  <div class="highscore">HIGHSCORE: <%= @top_score %></div>
+  <div class="score">
+    <div class="name_font"><%= @name ? @name : "Playing as Guest" %></div>
+    <div>SCORE: <span id="score"></span></div>
+  </div>
+  <div id="game-over">
+    <div id="game_end">GAME OVER</div>
+    <div><%= link_to "CLICK HERE TO START AS A NEW PLAYER", root_path %></div>
+  </div>
+  <div id="missing-hand">Place your hand over the Leap Motion device</div>
+  <div id="wave">WAVE NUMBER: <span id="wave_number"></span></div>
+  <div id="hidden_name"><%= @name %></div>
+  <div id="hidden_score"><%= @top_score %></div>
+<!--   <div id="sound_on" onclick="mute()"></div>
+  <div id="sound_off" onclick="unmute()"></div> -->
+</div>
 
 <script>
 //////// CANVAS SIZING ////////
@@ -37,7 +42,7 @@ var canvasElement = document.getElementById("leap");
 document.onload = OnResizeCalled();
 // Resizing canvas to the screen size on resize
 window.addEventListener("resize", OnResizeCalled, false); 
-function OnResizeCalled() { 
+function OnResizeCalled() {
   bgCanvas.style.width = window.innerWidth + 'px'; 
   bgCanvas.style.height = window.innerHeight + 'px'; 
   shipCanvas.style.width = window.innerWidth + 'px'; 
@@ -304,7 +309,7 @@ function Game() {
         document.getElementById('wave_number').innerHTML = (game.playerScore/180).toString();
         setTimeout(function(){
         document.getElementById('wave').style.display = "none";
-        }, 1000);
+        }, 2000);
         var height = imageRepository.enemy.height;
         var width = imageRepository.enemy.width;
         var x = 100;
@@ -347,9 +352,16 @@ function Game() {
     this.gameOverAudio.currentTime = 0;
     this.gameOverAudio.play();
     document.getElementById('game-over').style.display = "block"; // Make the object visible
-    // Grab user name
+    // Get top score for highscore comparison
+    top_score = document.getElementById('hidden_score').innerHTML;
+    if (top_score > game.playerScore){
+      document.getElementById('game_end').innerHTML = "GAME OVER";
+    } else {
+      document.getElementById('game_end').innerHTML = "CONGRATULATIONS ON THE NEW HIGHSCORE!";
+    }
+    // Grab user name from hidden div
     name = document.getElementById("hidden_name").innerHTML;
-    console.log(name);
+    // AJAX post to send data of user and score to Rails Controller
     $.ajax({
       type: "POST",
       url: "/index",
@@ -901,4 +913,15 @@ function checkReadyState() {
     game.start();
   }
 }
+// // Mute sound function
+// function mute() {
+//   document.getElementById("sound_off").style.display = "block";
+//   document.getElementById("sound_on").style.display = "none";
+// }
+// // Unmute sound function
+// function unmute() {
+//   document.getElementById("sound_off").style.display = "none";
+//   document.getElementById("sound_on").style.display = "block";
+// }
+
 </script>
