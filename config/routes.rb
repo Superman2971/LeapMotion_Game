@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   get '/game', to: 'highscores#game'
-  post '/highscore', to: 'highscores#highscore'
   post '/index', to: 'highscores#highscore'
 
   # The priority is based upon order of creation: first created -> highest priority.
