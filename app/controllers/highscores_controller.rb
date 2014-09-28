@@ -19,6 +19,7 @@ class HighscoresController < ApplicationController
     name = params[:initials]
     score = params[:score]
     Highscore.create!(initials: name, score: score)
+    render nothing: true
   end
 
 end

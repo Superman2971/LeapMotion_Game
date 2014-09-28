@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   get '/game', to: 'highscores#game'
-  post '/index', to: 'highscores#highscore'
+  constraints(ip: /127\.0\.0\.1/) do
+    post '/index', to: 'highscores#highscore'
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
